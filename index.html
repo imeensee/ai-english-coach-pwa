@@ -1,0 +1,24 @@
+
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="assets/icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<title>AI English Coach (Primary)</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><h1>🟡 AI English Coach</h1>
+<div class="meta"><span id="author"></span> • <span id="version"></span> <a href="./dashboard.html" class="dash">Dashboard</a></div>
+</header>
+<main>
+<section id="controls">
+  <label>Class <input id="className" placeholder="P6/1" aria-label="class name"></label>
+  <label>Student <input id="studentName" placeholder="Student name" aria-label="student name"></label>
+  <label>Week <select id="weekSel"></select></label>
+  <button id="start">Start</button><button id="speak">🔊 Read</button><button id="mic">🎤 Speak</button>
+  <button id="export">⬇️ Export</button><input id="importFile" type="file" accept="application/json" style="display:none">
+  <button id="importBtn">⬆️ Import</button>
+  <div class="stats">XP: <span id="xp">0</span> • Streak: <span id="streak">0</span></div>
+</section>
+<section id="chat" aria-live="polite"></section><section id="choices"></section>
+</main>
+<footer><small>Offline-ready (PWA). Add to Home Screen on iPad for best experience.</small></footer>
+<script src="app.js"></script></body></html>
