@@ -1,24 +1,44 @@
-
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="assets/icon-192.png"><link rel="manifest" href="manifest.webmanifest">
-<title>AI English Coach (Primary)</title><link rel="stylesheet" href="style.css"></head>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>AI English Coach</title>
+  <link rel="manifest" href="manifest.webmanifest"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
 <body>
-<header><h1>🟡 AI English Coach</h1>
-<div class="meta"><span id="author"></span> • <span id="version"></span> <a href="./dashboard.html" class="dash">Dashboard</a></div>
-</header>
-<main>
-<section id="controls">
-  <label>Class <input id="className" placeholder="P6/1" aria-label="class name"></label>
-  <label>Student <input id="studentName" placeholder="Student name" aria-label="student name"></label>
-  <label>Week <select id="weekSel"></select></label>
-  <button id="start">Start</button><button id="speak">🔊 Read</button><button id="mic">🎤 Speak</button>
-  <button id="export">⬇️ Export</button><input id="importFile" type="file" accept="application/json" style="display:none">
-  <button id="importBtn">⬆️ Import</button>
-  <div class="stats">XP: <span id="xp">0</span> • Streak: <span id="streak">0</span></div>
-</section>
-<section id="chat" aria-live="polite"></section><section id="choices"></section>
-</main>
-<footer><small>Offline-ready (PWA). Add to Home Screen on iPad for best experience.</small></footer>
-<script src="app.js"></script></body></html>
+  <header>
+    <h1>🟡 AI English Coach</h1>
+    <small>
+      ดร. นทีธร นาคพรหม &amp; นางสาวสิรินาถ สีนวน • v1.0
+      • <a href="./dashboard.html">Dashboard</a>
+    </small>
+  </header>
+
+  <section class="controls">
+    <label>School <input id="schoolId" placeholder="SCHOOL123"/></label>
+    <label>Class <input id="className" placeholder="P6/1"/></label>
+    <label>Student <input id="studentName" placeholder="Student name"/></label>
+    <label>Week <select id="weekSel"></select></label>
+    <button id="start">Start</button>
+    <button id="read">Read</button>
+    <button id="speak">Speak</button>
+    <button id="sync">🔁 Sync</button>
+    <span class="stats">XP: <b id="xp">0</b> • Streak: <b id="streak">0</b></span>
+  </section>
+
+  <main>
+    <div id="chat" class="chat"></div>
+    <div id="choices" class="choices"></div>
+  </main>
+
+  <section class="io">
+    <button id="export">Export</button>
+    <button id="importBtn">Import</button>
+    <input id="importFile" type="file" accept="application/json" hidden/>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
