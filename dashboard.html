@@ -1,44 +1,61 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<title>Teacher Dashboard — AI Coach</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Teacher Dashboard — AI Coach</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
-<header>
-  <h1>📊 Teacher Dashboard</h1>
-  <div class="meta"><a href="./index.html">Back to App</a></div>
-</header>
+  <header>
+    <h1>📊 Teacher Dashboard</h1>
+    <div class="meta"><a href="./index.html">Back to App</a></div>
+  </header>
 
-<main>
-  <section id="dashControls" class="controls">
-    <input id="filterSchool" placeholder="SCHOOL123"/>
-    <button id="applyFilter">Apply</button>
-    <button id="loadLocal">Load from device</button>
-    <button id="fetchServer">Fetch from Firestore</button>
-    <button id="clearLocal">Clear local data</button>
-  </section>
+  <main>
+    <!-- Controls -->
+    <section id="dashControls" class="controls">
+      <input id="filterSchool" placeholder="SCHOOL123"/>
+      <button id="applyFilter">Apply</button>
+      <button id="loadLocal">Load from device</button>
+      <button id="fetchServer">Fetch from Firestore</button>
+      <button id="clearLocal">Clear local data</button>
+    </section>
 
-  <section id="summary">
-    <h3>Summary</h3>
-    <div id="cards" class="grid"></div>
-  </section>
+    <!-- Summary cards -->
+    <section id="summary">
+      <h3>Summary</h3>
+      <div id="cards" class="grid"></div>
+    </section>
 
-  <section class="grid">
-    <div class="card"><h4>XP over time</h4><canvas id="xpLine"></canvas></div>
-    <div class="card"><h4>Top errors</h4><canvas id="errBar"></canvas></div>
-    <div class="card"><h4>Sessions by class</h4><canvas id="classBar"></canvas></div>
-  </section>
+    <!-- Charts -->
+    <section class="grid">
+      <div class="card"><h4>XP over time</h4><canvas id="xpLine"></canvas></div>
+      <div class="card"><h4>Top errors</h4><canvas id="errBar"></canvas></div>
+      <div class="card"><h4>Sessions by class</h4><canvas id="classBar"></canvas></div>
 
-  <section>
-    <h3>By Class & Student</h3>
-    <table id="byClass">
-      <thead><tr><th>Class</th><th>Student</th><th>Sessions</th><th>Total XP</th></tr></thead>
-      <tbody></tbody>
-    </table>
-  </section>
-</main>
+      <!-- ใหม่: เปรียบเทียบหลายโรงเรียน -->
+      <div class="card"><h4>Sessions by school</h4><canvas id="schoolSessions"></canvas></div>
+      <div class="card"><h4>XP by school</h4><canvas id="schoolXP"></canvas></div>
+    </section>
 
-<footer><small>Data from device queue or Firestore.</small></footer>
-<script src="dashboard.js"></script>
-</body></html>
+    <!-- Table -->
+    <section>
+      <h3>By Class & Student</h3>
+      <table id="byClass">
+        <thead>
+          <tr><th>Class</th><th>Student</th><th>Sessions</th><th>Total XP</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer><small>Data from device queue or Firestore.</small></footer>
+
+  <!-- Logic -->
+  <script src="dashboard.js"></script>
+</body>
+</html>
