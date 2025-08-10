@@ -1,6 +1,14 @@
 'use strict';
 
-// ---------- อ้างอิง element ในหน้าเรียน ----------
+// ====== DATA (ตัวอย่าง — ใช้ 12 บทเดิมของคุณได้เลย) ======
+window.DATA = window.DATA || {
+  weeks: [
+    {week:1, theme:"Me & My Classroom", mission:"Introduce yourself", dialog:[{bot:"What is your name?", choices:["My name is Tom.","I am Tom."]}]},
+    {week:2, theme:"Family & Friends",   mission:"Talk about family",  dialog:[{bot:"Who is she?", choices:["She is my mother.","He is my brother."]}]}
+  ]
+};
+
+// ---------- Elements ----------
 const el = {
   weekSel: document.getElementById('weekSel'),
   startBtn: document.getElementById('start'),
@@ -10,6 +18,7 @@ const el = {
   micBtn: document.getElementById('speak'),
   xpEl: document.getElementById('xp'),
   streakEl: document.getElementById('streak'),
+  schoolId: document.getElementById('schoolId'),
   className: document.getElementById('className'),
   studentName: document.getElementById('studentName'),
   exportBtn: document.getElementById('export'),
@@ -18,14 +27,14 @@ const el = {
   syncBtn: document.getElementById('sync')
 };
 
-// ---------- state + queue (เก็บในเครื่อง) ----------
+// ---------- State & Queue ----------
 let state = JSON.parse(localStorage.getItem('coach_state') || '{"xp":0,"streak":0}');
 let queue = JSON.parse(localStorage.getItem('coach_queue') || '[]');
 function save(){ localStorage.setItem('coach_state', JSON.stringify(state)); el.xpEl.textContent = state.xp; el.streakEl.textContent = state.streak; }
 function saveQueue(){ localStorage.setItem('coach_queue', JSON.stringify(queue)); }
 save();
 
-// ---------- Firebase: อ่าน config แล้วเชื่อม Firestore ----------
+// ---------- Firebase ----------
 let fb = null;
 async function initFirebase(){
   try{
@@ -40,9 +49,7 @@ async function initFirebase(){
     const db  = getFirestore(app);
     fb = {
       add: (evt) => addDoc(collection(db, 'events'), {
-        ...evt,
-        ts: new Date().toISOString(),
-        createdAt: serverTimestamp()
+        ...evt, ts: new Date().toISOString(), createdAt: serverTimestamp()
       })
     };
     console.log('Firebase ready');
@@ -52,12 +59,13 @@ async function initFirebase(){
 }
 initFirebase();
 
-// ---------- helper ----------
+// ---------- Helpers ----------
 function addBubble(who, text){
-  const d = document.createElement('div');
-  d.className = 'bubble ' + (who==='me' ? 'me' : 'bot');
-  d.textContent = (who==='me' ? '👧 ' : '🟡 ') + text;
-  el.chat.appendChild(d); el.chat.scrollTop = el.chat.scrollHeight;
+  const d=document.createElement('div');
+  d.className='bubble ' + (who==='me'?'me':'bot');
+  d.textContent=(who==='me'?'👧 ':'🟡 ') + text;
+  el.chat.appendChild(d);
+  el.chat.scrollTop=el.chat.scrollHeight;
 }
 function tts(text){ try{ const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; speechSynthesis.speak(u);}catch(e){} }
 function praise(){ return ['Great job! ⭐️','Nice try! 👍','Well done! 😊'][Math.floor(Math.random()*3)]; }
@@ -84,6 +92,7 @@ async function syncQueue(){
 function logEvent(payload){
   const evt = {
     week: parseInt(el.weekSel.value),
+    school: (el.schoolId?.value || 'Unknown'),
     class: el.className.value || 'Unknown',
     student: el.studentName.value || 'Unknown',
     ...payload
@@ -120,26 +129,23 @@ function startWeek(n){
   logEvent({type:'start_week'});
 }
 
-// export/import
+// Export/Import
 function exportData(){
   const blob=new Blob([JSON.stringify({state,queue},null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=document.createElement('a');
-  a.href=url; a.download='ai-coach-export.json'; a.click(); URL.revokeObjectURL(url);
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='ai-coach-export.json'; a.click(); URL.revokeObjectURL(url);
 }
 function importData(file){
   const r=new FileReader();
-  r.onload=()=>{
-    try{
+  r.onload=()=>{ try{
       const obj=JSON.parse(r.result);
       if(obj.state){ state=obj.state; save(); }
       if(Array.isArray(obj.queue)){ queue=obj.queue; saveQueue(); }
       alert('Imported successfully.');
-    }catch(e){ alert('Import failed: '+e.message); }
-  };
+    }catch(e){ alert('Import failed: '+e.message); } };
   r.readAsText(file);
 }
 
-// init UI
+// Init UI + events
 (function init(){
   if(window.DATA && window.DATA.weeks){
     window.DATA.weeks.forEach(w=>{
@@ -148,11 +154,11 @@ function importData(file){
       el.weekSel.appendChild(o);
     });
   }
-  addBubble('bot', "Welcome! Enter Class/Student, choose a week, then tap Start. You can also use the 🎤 mic.");
+  addBubble('bot', "Welcome! Enter School/Class/Student, choose a week, then tap Start. You can also use the 🎤 mic.");
 })();
 el.readBtn?.addEventListener('click', ()=>{
-  const bubbles=[...document.querySelectorAll('.bot')].map(b=>b.textContent.replace(/^🟡\s*/,''));
-  tts(bubbles.slice(-1)[0]||"Hello! Let's practice English.");
+  const last=[...document.querySelectorAll('.bot')].pop();
+  tts(last ? last.textContent.replace(/^🟡\s*/, '') : "Hello! Let's practice English.");
 });
 el.micBtn?.addEventListener('click', ()=>{
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -170,7 +176,5 @@ el.syncBtn?.addEventListener('click', syncQueue);
 
 // PWA
 if('serviceWorker' in navigator){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('./sw.js').catch(()=>{});
-  });
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
 }
